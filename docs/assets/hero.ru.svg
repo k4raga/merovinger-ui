@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640" xml:lang="ru">
+  <defs>
+    <radialGradient id="a">
+      <stop stop-color="#224331" stop-opacity=".44" />
+      <stop offset="1" stop-color="#0B1110" stop-opacity="0" />
+    </radialGradient>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+      <path d="M0 1 L6 4 L0 7" fill="none" stroke="#6EF7A5" stroke-width="1.2" />
+    </marker>
+  </defs>
+  <rect width="1280" height="640" fill="#0B1110" />
+  <ellipse cx="1100.8" cy="192.0" rx="640.0" ry="512.0" fill="url(#a)" />
+  <g opacity=".36">
+    <path d="M60 0 L60 640" fill="none" stroke="#1F3128" stroke-width="1" />
+    <path d="M260 0 L260 640" fill="none" stroke="#1F3128" stroke-width="1" />
+    <path d="M460 0 L460 640" fill="none" stroke="#1F3128" stroke-width="1" />
+    <path d="M660 0 L660 640" fill="none" stroke="#1F3128" stroke-width="1" />
+    <path d="M860 0 L860 640" fill="none" stroke="#1F3128" stroke-width="1" />
+    <path d="M1060 0 L1060 640" fill="none" stroke="#1F3128" stroke-width="1" />
+    <path d="M1260 0 L1260 640" fill="none" stroke="#1F3128" stroke-width="1" />
+  </g>
+  <g transform="translate(55 40) scale(0.625)">
+    <path d="M14 104 V16 H106 V84 L86 104 Z" fill="#101B15" stroke="#365C44" stroke-width="1.5" />
+    <path d="M30 83 V36 L60 62 L90 36 V83" fill="none" stroke="#6EF7A5" stroke-width="5" stroke-linejoin="miter" />
+    <rect x="56" y="58" width="8" height="8" fill="#F1F0E8" />
+    <path d="M21 16 H38 M106 65 V82" stroke="#6EF7A5" stroke-width="2" />
+  </g>
+  <text x="147" y="91" fill="#F1F0E8" font-family="Noto Serif" font-size="30" letter-spacing="4">MEROVINGER</text>
+  <rect x="1058" y="60" width="152" height="34" rx="17" fill="none" stroke="#385A43" />
+  <text x="1134" y="82" fill="#6EF7A5" font-family="Noto Mono" font-size="12" text-anchor="middle">UI / АЛЬФА</text>
+  <text x="64" y="229" fill="#F1F0E8" font-family="Noto Serif" font-size="70">Ваш интерфейс.</text>
+  <text x="64" y="315" fill="#F1F0E8" font-family="Noto Serif" font-size="70">Контекст агента.</text>
+  <text x="67" y="371" fill="#9DAFA5" font-family="Lato" font-size="24">Одно состояние. Общие типизированные команды.</text>
+  <rect x="64" y="436" width="344" height="116" rx="14" fill="#131D1A" stroke="#2B3E35" />
+  <text x="88" y="470" fill="#6EF7A5" font-family="Noto Mono" font-size="12" letter-spacing="2">СОСТОЯНИЕ</text>
+  <text x="88" y="513" fill="#F1F0E8" font-family="Lato" font-size="21">Объекты и команды</text>
+  <rect x="466" y="436" width="344" height="116" rx="14" fill="#131D1A" stroke="#2B3E35" />
+  <text x="490" y="470" fill="#6EF7A5" font-family="Noto Mono" font-size="12" letter-spacing="2">НАТИВНЫЙ UI</text>
+  <text x="490" y="513" fill="#F1F0E8" font-family="Lato" font-size="21">Обычные Qt-виджеты</text>
+  <rect x="868" y="436" width="344" height="116" rx="14" fill="#131D1A" stroke="#2B3E35" />
+  <text x="892" y="470" fill="#6EF7A5" font-family="Noto Mono" font-size="12" letter-spacing="2">АГЕНТ</text>
+  <text x="892" y="513" fill="#F1F0E8" font-family="Lato" font-size="21">Разрешённые контекст и кадр</text>
+  <path d="M414 494 L452 494" fill="none" stroke="#6EF7A5" stroke-width="2" marker-end="url(#arrow)" />
+  <path d="M816 494 L854 494" fill="none" stroke="#6EF7A5" stroke-width="2" marker-end="url(#arrow)" />
+  <path d="M64 594 L1216 594" fill="none" stroke="#2B3E35" stroke-width="1" />
+  <text x="65" y="619" fill="#9DAFA5" font-family="Noto Mono" font-size="11" letter-spacing="2">ИНСТРУМЕНТЫ ДЛЯ АГЕНТОВ</text>
+  <text x="1216" y="619" fill="#9DAFA5" font-family="Noto Mono" font-size="11" text-anchor="end">PYTHON 3.13  /  MIT</text>
+</svg>

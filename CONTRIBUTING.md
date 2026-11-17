@@ -1,3 +1,5 @@
+**English** · [Русский](CONTRIBUTING.ru.md)
+
 # Contributing
 
 Use Python 3.13 and a fresh virtual environment. Install the checkout and tests:

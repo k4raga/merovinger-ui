@@ -1,16 +1,18 @@
-![Merovinger UI — одно состояние для человека и агента](docs/assets/hero.svg)
+[English](README.md) · **Русский**
+
+![Merovinger UI — одно состояние для человека и агента](docs/assets/hero.ru.svg)
 
 # Merovinger UI
 
 **Нативный Qt-интерфейс и контекст агента из одного состояния и типизированных команд.**
 
-Python 3.13 · PySide6 · Alpha · [MIT](LICENSE) · [English](README.md)
+Python 3.13 · PySide6 · Alpha · [MIT](LICENSE)
 
 Свяжите поддерживаемые Qt-виджеты с состоянием приложения. Пользователь работает
 с нативными контролами, а ваш агент получает отфильтрованный политикой JSON и
 разрешённый PNG управляемой области. Команды и состояние у них общие.
 
-![Три шага работы](docs/assets/mechanics.svg)
+![Три шага работы](docs/assets/mechanics.ru.svg)
 
 1. **Опишите** Registry, типы состояния и обработчики команд.
 2. **Свяжите** Qt-контролы с полями и типизированными действиями.
@@ -67,7 +69,7 @@ bridge.invoke("enabled", False)
 доверенному host-коду. Приём команды ещё не означает завершение commit.
 Закрывайте владельцев пакетов и наблюдений, продолжайте вызывать
 `bridge.close()` до `True`, затем закрывайте runtime.
-Полный пример — в [quickstart](docs/quickstart.md).
+Полный пример — в [quickstart](docs/quickstart.ru.md).
 
 ## Поддерживаемая область
 
@@ -100,9 +102,9 @@ context/PNG → типизированное изменение → свежий
 снимка исходников, а не всех версий Windows и приложений.
 
 Ubuntu offscreen-проверки и команды воспроизведения — в
-[verification](docs/verification.md). Нативный macOS пока не проверен.
-Версия **alpha**; прочитайте [ограничения](docs/limits.md).
+[verification](docs/verification.ru.md). Нативный macOS пока не проверен.
+Версия **alpha**; прочитайте [ограничения](docs/limits.ru.md).
 
-[Quickstart](docs/quickstart.md) · [Архитектура](docs/architecture.md) ·
-[Участие](CONTRIBUTING.md) · [Изменения](CHANGELOG.md) ·
+[Quickstart](docs/quickstart.ru.md) · [Архитектура](docs/architecture.ru.md) ·
+[Участие](CONTRIBUTING.ru.md) · [Изменения](CHANGELOG.ru.md) ·
 [Memory](https://github.com/k4raga/merovinger-memory)

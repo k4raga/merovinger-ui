@@ -1,3 +1,5 @@
+**English** · [Русский](limits.ru.md)
+
 # Alpha scope and limits
 
 Merovinger UI is a Python 3.13 / PySide6 integration library. The current

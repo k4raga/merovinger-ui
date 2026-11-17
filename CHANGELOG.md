@@ -1,4 +1,13 @@
+**English** · [Русский](CHANGELOG.ru.md)
+
 # Changelog
+
+## Unreleased · documentation
+
+- English/Russian covers, mechanism diagrams and social-preview assets.
+- Language navigation at the top of README and all four technical guides.
+- Complete Russian quickstart, architecture, limits, verification and contributor/release notes.
+- Library source, runtime behavior, examples and test assertions are unchanged.
 
 ## 0.1.0a1 — 2026-11-17
 

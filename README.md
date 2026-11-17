@@ -1,10 +1,12 @@
+**English** · [Русский](README.ru.md)
+
 ![Merovinger UI — one state, human and agent views](docs/assets/hero.svg)
 
 # Merovinger UI
 
 **Native Qt interfaces and agent context, driven by the same state and typed commands.**
 
-Python 3.13 · PySide6 · Alpha · [MIT](LICENSE) · [Русский](README.ru.md)
+Python 3.13 · PySide6 · Alpha · [MIT](LICENSE)
 
 Bind a small, explicit set of Qt widgets to your application state. Your users
 interact with native controls; your own agent receives policy-filtered JSON and

@@ -1,3 +1,5 @@
+**English** · [Русский](architecture.ru.md)
+
 # One state, two views
 
 ![Mechanism](assets/mechanics.svg)

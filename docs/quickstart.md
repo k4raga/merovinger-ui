@@ -1,3 +1,5 @@
+**English** · [Русский](quickstart.ru.md)
+
 # Quickstart
 
 Use Python 3.13 and a virtual environment. From a clone of this repository:
