@@ -4,6 +4,7 @@ Use Python 3.13 and a fresh virtual environment. Install the checkout and tests:
 
 ```console
 python -m pip install . pytest==9.2.0 build
+python -c "from pathlib import Path; Path('.runtime').mkdir(exist_ok=True)"
 python -m pytest -q tests --basetemp .runtime/pytest
 ```
 
