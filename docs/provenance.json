@@ -1,0 +1,264 @@
+{
+  "upstream_revision": "940f06679346315a29db1f6112f50b761cdc41db",
+  "snapshot_date": "2026-11-17",
+  "public_distribution": "merovinger-ui",
+  "import_paths_preserved": true,
+  "sources": [
+    {
+      "path": "src/agent_native/__init__.py",
+      "sha256": "e6a9c79ed083b9c372be71146d294da68b1c6d354d42c0b5162373e0681a918a"
+    },
+    {
+      "path": "src/agent_native/context/__init__.py",
+      "sha256": "18b549206842f2218b776aea8ed142dbb0d676eae4b88c519203675041666db2"
+    },
+    {
+      "path": "src/agent_native/context/_projection.py",
+      "sha256": "bb2117d6a937655c62c1176fe19fbf2e579ae17ba8cb3e728ba1ef8ee0ecfe80"
+    },
+    {
+      "path": "src/agent_native/context/bindings.py",
+      "sha256": "17f1b0cb47f5cd3c097ff0a0f8482b6fb46f0f9646ac8913fc517d9817d1ab64"
+    },
+    {
+      "path": "src/agent_native/context/definitions.py",
+      "sha256": "4447f9c1d5d37f0cbd4d29251a48f6183cb08037ffc2e8c991a82e9dabe16ad2"
+    },
+    {
+      "path": "src/agent_native/context/gate.py",
+      "sha256": "c5d67209436a9a0924bdb2777ffe787ac9b9999771fc1fb2573823f9b4735a10"
+    },
+    {
+      "path": "src/agent_native/context/index.py",
+      "sha256": "4a5fd6cc8d627e80bee3559ce24bd18361dcde676b67646273de9eb7e8082f0e"
+    },
+    {
+      "path": "src/agent_native/context/policy.py",
+      "sha256": "8080867af327092b9634fda9d785084046edf6766aed7a3d507734e448907cb2"
+    },
+    {
+      "path": "src/agent_native/context/semantic.py",
+      "sha256": "36f005f0b91e79aadc73a374d71af73adf63a2433cd5fa560d3b4f63785ce2af"
+    },
+    {
+      "path": "src/agent_native/kernel/__init__.py",
+      "sha256": "57bc0f67bca029dd3ddb72155129fe8218c6bde424a6e01b2e16d2135c5a9fa9"
+    },
+    {
+      "path": "src/agent_native/kernel/_capacity.py",
+      "sha256": "2e8f83d8de21fcbd8bd8e8b48fe046b72338e1b408138eca387cc1c203b87f9d"
+    },
+    {
+      "path": "src/agent_native/kernel/_command_values.py",
+      "sha256": "ef334ada6e78c49f488e202805ab77b679927027a4bb2922e68b4ecb93e7aa29"
+    },
+    {
+      "path": "src/agent_native/kernel/_effect_capacity.py",
+      "sha256": "fc776a7145837d35737fc0db4e47d8c4493f121000f97d777f5094c45869ae83"
+    },
+    {
+      "path": "src/agent_native/kernel/_grant_authority.py",
+      "sha256": "864f6c58ab437e9524c977962686b9dbff023d1312f4a35770a69b8ada198930"
+    },
+    {
+      "path": "src/agent_native/kernel/_input_lineage.py",
+      "sha256": "ec00e9c941b1c2e18413b0acf6a5e63f4c13552de3958f79285d0122bd93d3e5"
+    },
+    {
+      "path": "src/agent_native/kernel/_operation_proofs.py",
+      "sha256": "cea384b36a05009ac86afe85f3cf1966245d0de3351be005b9636322f601b6fa"
+    },
+    {
+      "path": "src/agent_native/kernel/_prepare_origin.py",
+      "sha256": "6c244d9202c3a769cf2159173e635a267d80f29b629f4429b5dc5d42c03405c3"
+    },
+    {
+      "path": "src/agent_native/kernel/_system_integrity.py",
+      "sha256": "3fd2876536056b270e4e6af74a1c6c7e473675bed241ae1b7061124033a2b691"
+    },
+    {
+      "path": "src/agent_native/kernel/_validation.py",
+      "sha256": "b55579b1c6e32ba1bbebafd431f96cc4f417183532b6f4d6a8f9b386b1d4ee9d"
+    },
+    {
+      "path": "src/agent_native/kernel/commands.py",
+      "sha256": "973749b608b31eb48911ca466f6e5c760e50e38e9d98e04b0548503fd81eca67"
+    },
+    {
+      "path": "src/agent_native/kernel/coordinator.py",
+      "sha256": "e4d9626918b286be25d3bb957353f59b3af353c6bc6df094fbbeaad5ea47338a"
+    },
+    {
+      "path": "src/agent_native/kernel/host_turn.py",
+      "sha256": "5c5a5c04bfa69f5b48db316970c4bad36698832af469bcf851f80a51dc990a6d"
+    },
+    {
+      "path": "src/agent_native/kernel/permissions.py",
+      "sha256": "95df08c1c12e81a17a80c1b3a1b6eb432b582aad902f04f8a9126988aae27041"
+    },
+    {
+      "path": "src/agent_native/kernel/system_definitions.py",
+      "sha256": "f21b27946da39f375f969543bebf4fce198761d2c4dd6ce259cc6fea36d7645f"
+    },
+    {
+      "path": "src/agent_native/observation/__init__.py",
+      "sha256": "dc627660bc6902a256ede760521821452c35354c6f87b030efdc7738292bd055"
+    },
+    {
+      "path": "src/agent_native/observation/_export_runtime.py",
+      "sha256": "e0280bc532608cbc40be64a50309b7e77952743d95efdca66ac54a1ee7826c35"
+    },
+    {
+      "path": "src/agent_native/observation/_export_types.py",
+      "sha256": "f8ac888d6a29396946eee57aa893bced0b926d3a702afbad6fc3cdb51900e302"
+    },
+    {
+      "path": "src/agent_native/observation/assets.py",
+      "sha256": "e7dc3b2646d333a68866c468dd6c66b3844c7cd52f49e5ccb473bf43e7eac864"
+    },
+    {
+      "path": "src/agent_native/observation/capture.py",
+      "sha256": "b6a9681e9e5562c860d19e66e10694e311f6b7d34b9eca94557dd9d514e1488a"
+    },
+    {
+      "path": "src/agent_native/observation/channel.py",
+      "sha256": "db73e5aeee2183fa42dfe5306a31b53b85636f90ced712d7fc9e532730d607cf"
+    },
+    {
+      "path": "src/agent_native/observation/envelope.py",
+      "sha256": "8c28548d2d41262edf9986218d947ff3e99e9334c821f007e99631eef9df270d"
+    },
+    {
+      "path": "src/agent_native/observation/export_policy.py",
+      "sha256": "7c3fdb3eb3eb15317929556617f902ce5cdf400d501c69452c14b361f2172287"
+    },
+    {
+      "path": "src/agent_native/observation/frames.py",
+      "sha256": "346ac40126e8273ca0aea795dc90455c2953c9db976342dbc687e9624044c278"
+    },
+    {
+      "path": "src/agent_native/observation/lineage.py",
+      "sha256": "46f161cf9e9387e22b75397b5e630896749ebeb1f360d1fea933242897feb042"
+    },
+    {
+      "path": "src/agent_native/observation/surfaces.py",
+      "sha256": "f60ebda237efc1a91894710eec2e9afc7090d180f28ab7407feea8746cf642b9"
+    },
+    {
+      "path": "src/agent_native/persistence/__init__.py",
+      "sha256": "24d6065234acc06a62557affa4077929e07ffd61fc3339defe84ae602d5a9429"
+    },
+    {
+      "path": "src/agent_native/persistence/codec.py",
+      "sha256": "58cf0a6df1b1aa6522df56036d81f238da90a8118863cd2784b3200477e3a81d"
+    },
+    {
+      "path": "src/agent_native/persistence/recovery.py",
+      "sha256": "cf7a68b79414547d977ef11c761be8d27fee0390b77dc09af24af64c5a446d58"
+    },
+    {
+      "path": "src/agent_native/persistence/storage.py",
+      "sha256": "f65ddb0b56b18c495a5f33f194e6ef5af511a2f9d265a2e57d55134bc2ddb268"
+    },
+    {
+      "path": "src/agent_native/persistence/worker.py",
+      "sha256": "b37a40d6ce1b6eba81c6ee5b3cfb531f004ea7d370e2cd3a47c44324c1d46855"
+    },
+    {
+      "path": "src/agent_native/schema/__init__.py",
+      "sha256": "b8b8dd5d8053d2df393e239f882c92bb8b765e0543ca88fc6345b26272855c9f"
+    },
+    {
+      "path": "src/agent_native/schema/codec.py",
+      "sha256": "4e0100e9d257b30770f4d73579dd52af520b81ba26a0a40d36a1f7b8e4e36a3d"
+    },
+    {
+      "path": "src/agent_native/schema/descriptors.py",
+      "sha256": "cae7d9f444f2d9dbd781b113526eee919340d2a6560a6282da8ab22750bbe1f6"
+    },
+    {
+      "path": "src/agent_native/schema/permissions.py",
+      "sha256": "0a4d300a92f5be78e9abf7dbc7ee4ce2e3e8497b6c7faf835eefacd66f29566c"
+    },
+    {
+      "path": "src/agent_native/schema/registry.py",
+      "sha256": "dfb96ee359c21dfd886206de7281a89581dd386b9f2c86f5fab29708859ddfc9"
+    },
+    {
+      "path": "src/agent_native/schema/types.py",
+      "sha256": "78091f020486c1789e067bac3f2cbaa7d43a4477f8cb363e63da67abed4c49f4"
+    },
+    {
+      "path": "src/agent_native/state/__init__.py",
+      "sha256": "cd00f6015e3da29d0c7ccbcb1ec7435d9ffc51176e312734bdb386a4977d63b6"
+    },
+    {
+      "path": "src/agent_native/state/derived.py",
+      "sha256": "dd3c2c43988452e55779476ad70f5aa45be16f9c2f2902a859ace59a239d758e"
+    },
+    {
+      "path": "src/agent_native/state/lifetime.py",
+      "sha256": "308335bd7c971a7730a7a44f9cef8cecfed5f93b1192f84f0a28abd5e7f40597"
+    },
+    {
+      "path": "src/agent_native/state/query.py",
+      "sha256": "a48225e115911acb19387ba8f9eb9a8f7f78d361b583449a5d61df9810d3f029"
+    },
+    {
+      "path": "src/agent_native/state/records.py",
+      "sha256": "d9e483974e5d5a6ada0b9dd77b1a1ab743272ead75eae57c9209fbe799c61c39"
+    },
+    {
+      "path": "src/agent_native/state/snapshots.py",
+      "sha256": "0b76e606c1f939f2ff142f0c56b408bb1099a605ce44af93426df40fd8f79300"
+    },
+    {
+      "path": "src/agent_native/state/tracking.py",
+      "sha256": "f438dec1cfb01e18444c0d3104b79ad578d1bcc3c1644c0012f0e8f25e53c736"
+    },
+    {
+      "path": "src/agent_native/ui/__init__.py",
+      "sha256": "6d3de13a7beb522d4a1c2c2b16d6abff02cee0978ccc5e5e8e2f5336912fa4b7"
+    },
+    {
+      "path": "src/agent_native/ui/bridge.py",
+      "sha256": "0bb09a15e1f91165fb1bd9eb0a29d0da0ab5badec192f878a59abb51853c24f8"
+    },
+    {
+      "path": "src/agent_native/ui/declarations.py",
+      "sha256": "2c19fee3b70859068381dbae5698a40b7809c83f10a6233a3c52380232189545"
+    },
+    {
+      "path": "src/agent_native/ui/editing.py",
+      "sha256": "a85d9f8c9f1b3fe2f6965282659860c8818d8c4efa9f0f4fca66bdbc283220c6"
+    },
+    {
+      "path": "src/agent_native/ui/embedding.py",
+      "sha256": "b093f9c5abc01a345cdc0ff68614e99907feca5f2258912eb48a160f9fe990a5"
+    },
+    {
+      "path": "src/agent_native/ui/engine.py",
+      "sha256": "1c9390629b2f577e8cd82fd5455bb395052918bcff58da27f588cf5ee394ed94"
+    },
+    {
+      "path": "src/agent_native/ui/host.py",
+      "sha256": "bef38e84b0ef701209432663cc1d4180afc63902487d99ac9bdf6f0650347f18"
+    },
+    {
+      "path": "src/agent_native/ui/model.py",
+      "sha256": "41de4ae520434ed72969a56f7fc9f76ef64e0467dd1670b0508fa8192402e083"
+    },
+    {
+      "path": "src/agent_native/ui/runtime.py",
+      "sha256": "80fcea01aaf97485a5892ecb6756e32b85ce107b48f53dc9678f9d7e3cb71be4"
+    },
+    {
+      "path": "src/agent_native/ui/session.py",
+      "sha256": "999396186d2d2f347ab552d310443f98d488e3c4dcdefd84fed23f896a48bf1b"
+    },
+    {
+      "path": "src/agent_native/ui/widgets.py",
+      "sha256": "b671d84f2d9f68522ee7ea57594b0fa6d7baaea00371fb902dd23325a5c89c1b"
+    }
+  ]
+}

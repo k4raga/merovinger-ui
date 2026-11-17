@@ -1,0 +1,24 @@
+[build-system]
+requires = ["hatchling==1.33.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "merovinger-ui"
+version = "0.1.0a1"
+description = "Shared state, typed actions and coherent frames for native Qt applications"
+readme = "README.md"
+requires-python = ">=3.13,<3.14"
+license = "MIT"
+authors = [{name = "k4raga"}]
+dependencies = ["PySide6-Essentials==6.12.0", "pydantic==2.14.3"]
+
+[project.urls]
+Repository = "https://github.com/k4raga/merovinger-ui"
+Issues = "https://github.com/k4raga/merovinger-ui/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/agent_native"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
