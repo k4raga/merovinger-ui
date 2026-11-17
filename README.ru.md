@@ -6,7 +6,7 @@
 
 **Нативный Qt-интерфейс и контекст агента из одного состояния и типизированных команд.**
 
-Python 3.13 · PySide6 · Alpha · [MIT](LICENSE)
+Python 3.13 · PySide6 · Альфа · [MIT](LICENSE)
 
 Свяжите поддерживаемые Qt-виджеты с состоянием приложения. Пользователь работает
 с нативными контролами, а ваш агент получает отфильтрованный политикой JSON и
@@ -38,17 +38,17 @@ python -m pip install "git+https://github.com/k4raga/merovinger-ui.git"
 ```
 
 [Самодостаточный пример](examples/ui_agent/main.py) открывает Qt-окно с полем ввода,
-checkbox и списком. Простой локальный агент читает JSON и PNG, выбирает
+флажком и списком. Простой локальный агент читает JSON и PNG, выбирает
 типизированное переключение и проверяет новый пакет. **Вызовов модели и сети нет.**
-На этой границе можно подключить собственный model adapter.
+На этой границе можно подключить собственный адаптер модели.
 
 ![Пример управляемого Qt-интерфейса](docs/assets/demo.png)
 
-Имя distribution — `merovinger-ui`; Python imports сохранены как `agent_native`.
+Имя пакета — `merovinger-ui`; пространство имён импорта Python сохранено как `agent_native`.
 
 ## Явный API и жизненный цикл
 
-В существующем Qt event loop приложения:
+В существующем цикле событий Qt приложения:
 
 ```python
 from agent_native.ui import Destination
@@ -57,19 +57,19 @@ pending = bridge.observe_for_model(destination=Destination(
     "my-agent", "custom-python", "owner", "adapter-v1"
 ))
 
-# В следующем тике таймера приложения; скрытого event loop внутри poll() нет.
+# В следующем тике таймера приложения; скрытого цикла событий внутри poll() нет.
 if pending.poll():
     with pending.take() as packet:
-        my_adapter(packet.context_json, packet.images)  # image.png — bytes
+        my_adapter(packet.context_json, packet.images)  # image.png — байты
 
 bridge.invoke("enabled", False)
 ```
 
 `take()` повторно проверяет текущие права и срок действия перед передачей байтов
-доверенному host-коду. Приём команды ещё не означает завершение commit.
+доверенному коду приложения. Приём команды ещё не означает сохранение изменения.
 Закрывайте владельцев пакетов и наблюдений, продолжайте вызывать
-`bridge.close()` до `True`, затем закрывайте runtime.
-Полный пример — в [quickstart](docs/quickstart.ru.md).
+`bridge.close()` до `True`, затем закрывайте среду выполнения.
+Полный пример — в [руководстве по подключению](docs/quickstart.ru.md).
 
 ## Поддерживаемая область
 
@@ -84,27 +84,27 @@ bridge.invoke("enabled", False)
 | `QCheckBox` | `toggle` |
 | `QSpinBox` | `number` |
 
-Существующие виджеты должны занимать прямые слоты `QBoxLayout` внутри host parent.
-Приложение явно задаёт состояние, команды и bindings; произвольные готовые окна
+Существующие виджеты должны занимать прямые слоты `QBoxLayout` под переданным родительским виджетом.
+Приложение явно задаёт состояние, команды и привязки; произвольные готовые окна
 автоматически не распознаются.
 
 - Состояние в SQLite и проверяемые типизированные команды.
-- Read-only views с настоящими ограниченными read grants.
+- Представления только для чтения с ограниченными разрешениями.
 - Контекст и PNG из одной опубликованной ревизии.
 - Проверка текущей политики, ограниченное хранение изображений, явная очистка.
-- Runner, model SDK, Memory и Programs для работы не требуются.
+- Runner, SDK модели, Memory и Programs для работы не требуются.
 
 ## Проверки и границы
 
-Экспортированный SDK прошёл **9 standalone UI-проверок на Windows 11 LTSC**:
-Python 3.13.17, Qt 6.12.0, нативный backend `windows`. Также проверен пример
-context/PNG → типизированное изменение → свежий пакет. Это проверка конкретного
+Экспортированный SDK прошёл **9 самостоятельных UI-проверок на Windows 11 LTSC**:
+Python 3.13.17, Qt 6.12.0, нативный режим Qt `windows`. Также проверен пример
+контекст/PNG → типизированное изменение → свежий пакет. Это проверка конкретного
 снимка исходников, а не всех версий Windows и приложений.
 
 Ubuntu offscreen-проверки и команды воспроизведения — в
-[verification](docs/verification.ru.md). Нативный macOS пока не проверен.
-Версия **alpha**; прочитайте [ограничения](docs/limits.ru.md).
+[разделе проверок](docs/verification.ru.md). Нативная работа на macOS пока не проверена.
+Версия **альфа**; прочитайте [ограничения](docs/limits.ru.md).
 
-[Quickstart](docs/quickstart.ru.md) · [Архитектура](docs/architecture.ru.md) ·
+[Быстрый старт](docs/quickstart.ru.md) · [Архитектура](docs/architecture.ru.md) ·
 [Участие](CONTRIBUTING.ru.md) · [Изменения](CHANGELOG.ru.md) ·
-[Memory](https://github.com/k4raga/merovinger-memory)
+[Memory](https://github.com/k4raga/merovinger-memory/blob/main/README.ru.md)
