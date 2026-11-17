@@ -25,7 +25,9 @@ jobs:
       - name: Install package and test tools
         run: python -m pip install . pytest==9.2.0 build
       - name: Run standalone tests
-        run: python -m pytest -q tests --basetemp .runtime/pytest
+        run: |
+          mkdir -p .runtime
+          python -m pytest -q tests --basetemp .runtime/pytest
       - name: Run context and PNG example
         run: python examples/ui_agent/main.py --smoke --report .runtime/smoke.json
       - name: Build wheel
