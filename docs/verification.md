@@ -56,3 +56,7 @@ On 2026-11-17, a fresh environment in this repository installed
 
 The repository workflow repeats these checks and builds a wheel. No public CI
 result is claimed before the workflow runs.
+
+## Linux host libraries
+
+The Qt Python wheel still needs native system libraries. The offscreen CI job installs `libegl1 libopengl0 libgl1 libxkbcommon0 libdbus-1-3 libfontconfig1` on Ubuntu before importing Qt. `QT_QPA_PLATFORM=offscreen` removes the display-server requirement; it does not remove shared-library dependencies. The first public Actions run failed during collection because `libEGL.so.1` was absent; no tests ran in that failed job. The workflow now installs the libraries explicitly. Check the linked Actions history for the corrected run.
