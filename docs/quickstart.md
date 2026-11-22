@@ -64,11 +64,38 @@ From the host's normal timer, call `poll()`. Once ready, `take()` returns one
 context-managed payload with `context_json`, `images`, `cut` and `visual_status`.
 Each image has `png` bytes and the original capture stamp.
 
-Your adapter receives these values and chooses a declared action.
-Call `bridge.invoke(path, value)`, then wait until `bridge.status.ready` and
-check its outcome or observe a fresh packet. `"accepted"` is intake acceptance,
-not a fabricated durable result. The example's local agent chooses the
-`enabled` toggle, then verifies both context and PNG changed.
+Your adapter receives these values and chooses a declared action. Use
+`invoke_tracked` to handle that particular call in the application's Qt loop:
+
+```python
+def on_result(result):
+    if result.outcome == "committed_local":
+        show_saved(result.invocation_id)
+    elif result.outcome == "failed_no_effect":
+        show_refusal(result.error)
+    else:
+        show_status(result.outcome)
+
+operation = bridge.invoke_tracked("enabled", False, on_result=on_result)
+```
+
+`operation.invocation_id` matches each callback's `result.invocation_id`.
+`operation.accepted` reports intake and `operation.intake` is the same string
+returned by the existing `bridge.invoke(path, value)`. `operation.result` is
+`None` while awaiting its first outcome, then holds the latest snapshot.
+
+- `committed_local` carries the original kernel receipt for a confirmed local write.
+- `failed_no_effect` reports a refusal or confirmed rollback, with an error code.
+- `unknown` means the bridge could not establish the outcome. Keep the state
+  unresolved. With `final=False`, the same invocation can still report a later
+  result. `final=True` marks the last report from this handle.
+- `approval_required` and `pending_external`, when reported by the kernel,
+  carry the original receipt for work awaiting approval or an external result.
+
+The optional callback runs asynchronously on the Qt thread and receives the
+latest snapshot if several updates arrive before notification. Keep the
+application event loop running. The example's local agent verifies both
+context and PNG after the typed change.
 
 An editor's draft is independent of its committed field. Invoking its command
 directly does not silently overwrite an unsaved local draft.

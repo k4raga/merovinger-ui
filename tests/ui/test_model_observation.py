@@ -1,7 +1,9 @@
-"""Affected real Qt/C1 export tests; no provider/Runner/program backend."""
+"""Real Qt/C1 AppBridge action and export tests."""
+from dataclasses import replace
 import importlib.util
 import json
 from pathlib import Path
+from queue import Queue
 from threading import Event
 from time import monotonic, sleep
 
@@ -9,8 +11,10 @@ import pytest
 from PySide6.QtGui import QImage
 from PySide6.QtWidgets import QApplication
 from agent_native.context import PolicyRules
+from agent_native.kernel.coordinator import DBOutcome, Phase
 from agent_native.observation._export_types import ExportError, ExportLimits
 from agent_native.observation.channel import Destination, Observation
+from agent_native.ui import BridgeInvocation, BridgeInvocationResult
 
 
 def fixture(tmp_path, *, readonly=False):
@@ -34,6 +38,134 @@ def fixture(tmp_path, *, readonly=False):
 
     wait(lambda: demo.bridge.status.ready)
     return demo, wait
+
+
+@pytest.fixture
+def command_demo(tmp_path):
+    demo, wait = fixture(tmp_path)
+    try:
+        yield demo, wait
+    finally:
+        wait(demo.bridge.close)
+        wait(demo.runtime.close)
+        demo.window.hide()
+
+
+def assert_committed(demo, invocation, outcome, enabled):
+    assert isinstance(invocation, BridgeInvocation)
+    assert isinstance(outcome, BridgeInvocationResult)
+    assert outcome is invocation.result
+    assert outcome.invocation_id == invocation.invocation_id
+    assert outcome.final and outcome.outcome == "committed_local"
+    assert outcome.error is None
+    assert outcome.receipt.outcome == "committed_local"
+    with demo.runtime.coordinator.read() as cut:
+        request = cut.view.field(outcome.receipt.invocation, "request")
+        assert request.key.entity_id == invocation.invocation_id
+        assert cut.view.field(demo.board, "enabled") is enabled
+
+
+def test_tracked_command_reports_local_commit(command_demo):
+    demo, wait = command_demo
+    results = []
+    invocation = demo.bridge.invoke_tracked("enabled", False, on_result=results.append)
+    assert invocation.accepted and invocation.intake == "accepted"
+    assert invocation.result is None
+    assert results == []
+
+    wait(lambda: results)
+    assert len(results) == 1
+    assert_committed(demo, invocation, results[0], False)
+
+
+def test_tracked_command_reports_refusal_without_effect(command_demo):
+    demo, wait = command_demo
+    results = []
+    invocation = demo.bridge.invoke_tracked("enabled", "wrong type", on_result=results.append)
+    assert invocation.accepted
+
+    wait(lambda: results)
+    assert len(results) == 1
+    result = results[0]
+    assert result is invocation.result and result.final
+    assert result.invocation_id == invocation.invocation_id
+    assert (result.outcome, result.error, result.receipt) == ("failed_no_effect", "invalid_arguments", None)
+    with demo.runtime.coordinator.read() as cut:
+        assert cut.view.field(demo.board, "enabled") is True
+
+
+@pytest.mark.parametrize("uncertain_enqueue", [False, True])
+def test_tracked_command_resolves_after_delayed_ack(command_demo, monkeypatch, uncertain_enqueue):
+    demo, wait = command_demo
+    coordinator, port = demo.runtime.coordinator, demo.runtime.port
+    held = Queue()
+    deliver = port._deliver
+    submit = port.submit
+
+    def hold_command_ack(outcome, operation_id):
+        if operation_id.startswith("command-"):
+            held.put(outcome)
+        else:
+            deliver(outcome, operation_id)
+
+    def lose_enqueue_confirmation(submission):
+        disposition = submit(submission)
+        if submission.operation_id.startswith("command-"):
+            raise OSError("test lost enqueue confirmation")
+        return disposition
+
+    monkeypatch.setattr(port, "_deliver", hold_command_ack)
+    if uncertain_enqueue:
+        monkeypatch.setattr(port, "submit", lose_enqueue_confirmation)
+
+    results = []
+    invocation = demo.bridge.invoke_tracked("enabled", False, on_result=results.append)
+    wait(lambda: not held.empty())
+    ack = held.get_nowait()
+    try:
+        assert ack.outcome == DBOutcome.COMMITTED and invocation.accepted
+        refused = demo.bridge.invoke_tracked("enabled", True)
+        assert not refused.accepted and refused.invocation_id != invocation.invocation_id
+        assert (refused.result.outcome, refused.result.error) == ("failed_no_effect", "busy")
+        if not uncertain_enqueue:
+            assert invocation.result is None and not results
+            coordinator.offer_db_outcome(replace(ack, outcome=DBOutcome.UNKNOWN))
+
+        wait(lambda: results)
+        assert len(results) == 1
+        unknown = results[0]
+        assert unknown is invocation.result
+        assert unknown.invocation_id == invocation.invocation_id
+        assert (unknown.outcome, unknown.final, unknown.receipt) == ("unknown", False, None)
+        assert coordinator.phase == Phase.RECONCILING
+    finally:
+        coordinator.offer_db_outcome(ack)
+    wait(lambda: len(results) == 2)
+    assert_committed(demo, invocation, results[1], False)
+
+
+def test_sequential_tracked_commands_keep_distinct_receipts(command_demo):
+    demo, wait = command_demo
+    first_results, second_results, subsequent = [], [], []
+
+    def on_first(result):
+        first_results.append(result)
+        subsequent.append(demo.bridge.invoke_tracked("enabled", True, on_result=second_results.append))
+
+    first = demo.bridge.invoke_tracked("enabled", False, on_result=on_first)
+    wait(lambda: second_results)
+    second, = subsequent
+    prior, = first_results
+    current, = second_results
+    assert first.accepted and second.accepted
+    assert prior is first.result and current is second.result
+    assert prior.invocation_id == first.invocation_id != second.invocation_id
+    assert prior.final and prior.outcome == "committed_local"
+    assert prior.receipt.plan_id != current.receipt.plan_id
+    assert_committed(demo, second, current, True)
+    with demo.runtime.coordinator.read() as cut:
+        request = cut.view.field(prior.receipt.invocation, "request")
+        assert request.key.entity_id == first.invocation_id
 
 
 def test_model_png_context_action_fresh_frame_and_policy(tmp_path):

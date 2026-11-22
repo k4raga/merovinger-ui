@@ -5,11 +5,14 @@ the host's UI or full system profile; no Runner, program backend, memory
 runtime, CLI or network is constructed here.
 """
 from dataclasses import dataclass
+from uuid import uuid4
 
+from PySide6.QtCore import QTimer
 from PySide6.QtWidgets import QWidget, QBoxLayout
 from shiboken6 import isValid
 
 from agent_native.context import ContextExportGate, ContextRequest, PolicyRules
+from agent_native.kernel.commands import CommandReceipt
 from agent_native.kernel.coordinator import Phase
 from agent_native.observation import CaptureService, SurfaceRegistry, CaptureError
 from .declarations import Action, Control
@@ -25,6 +28,61 @@ class BridgeStatus:
     closing: bool
     closed: bool
     error: object
+
+
+@dataclass(frozen=True, slots=True)
+class BridgeInvocationResult:
+    """One invocation's public outcome and its original kernel receipt, if any."""
+    invocation_id: str
+    outcome: str
+    final: bool
+    receipt: CommandReceipt | None = None
+    error: str | None = None
+
+
+class BridgeInvocation:
+    """A live, Qt-thread-owned handle returned by AppBridge.invoke_tracked()."""
+    def __init__(self, on_result):
+        self._invocation_id = uuid4().hex
+        self._intake = None
+        self._result = None
+        self._on_result = on_result
+        self._notification_pending = False
+
+    @property
+    def invocation_id(self):
+        return self._invocation_id
+
+    @property
+    def intake(self):
+        """The same intake string returned by AppBridge.invoke()."""
+        return self._intake
+
+    @property
+    def accepted(self):
+        return self.intake == "accepted"
+
+    @property
+    def result(self):
+        """Latest outcome snapshot, or None while awaiting the first outcome."""
+        return self._result
+
+    def _publish(self, outcome, error=None, receipt=None, *, final=True):
+        if self._result is not None and self._result.final:
+            return
+        result = BridgeInvocationResult(self.invocation_id, outcome, final, receipt, error)
+        if result != self._result:
+            self._result = result
+            if self._on_result is not None and not self._notification_pending:
+                self._notification_pending = True
+                QTimer.singleShot(0, self._notify)
+
+    def _notify(self):
+        self._notification_pending = False
+        callback, result = self._on_result, self._result
+        if result.final:
+            self._on_result = None
+        callback(result)
 
 
 class BridgeAttachError(RuntimeError):
@@ -84,8 +142,8 @@ class BridgeObservation:
 class AppBridge:
     """Embed a managed surface in an existing QApplication and QBoxLayout.
 
-    invoke() returns intake/acceptance, never a fabricated completion. Poll
-    status while the existing Qt event loop drives the shared HostTurn.
+    invoke() returns intake/acceptance. Use invoke_tracked() for the outcome
+    of a specific call while the existing Qt event loop drives the HostTurn.
     close() is nonblocking: keep that event loop alive and retry until True.
     Coordinator/kernel/port/application ownership always remains with the host.
     """
@@ -170,6 +228,26 @@ class AppBridge:
 
     def invoke(self, path, value=None):
         """Trusted host invokes a declared bound control through UiSessionBroker."""
+        self._validate_action(path)
+        return self.engine.invoke(path, value)
+
+    def invoke_tracked(self, path, value=None, *, on_result=None):
+        """Invoke a bound control and return its own intake and outcome handle.
+
+        Optional on_result(result) runs on the Qt event loop after this call
+        returns. An unresolved outcome can later become final; updates before
+        the callback runs may be coalesced into the latest snapshot.
+        """
+        self._validate_action(path)
+        if on_result is not None and not callable(on_result):
+            raise TypeError("Use a callable on_result")
+        invocation = BridgeInvocation(on_result)
+        invocation._intake = self.engine.invoke(path, value, _invocation=invocation)
+        if not invocation.accepted and invocation.result is None:
+            invocation._publish("failed_no_effect", invocation.intake)
+        return invocation
+
+    def _validate_action(self, path):
         EngineUi.assert_owner()
         if self._closing or self._closed:
             raise RuntimeError("Bridge is closing")
@@ -177,7 +255,6 @@ class AppBridge:
             raise ValueError("Unknown managed control path")
         if self.engine.controls[path].action is None:
             raise ValueError("Control has no bound action")
-        return self.engine.invoke(path, value)
 
     def observe(self, destination, *, rules=None):
         """Local policy-bound semantics and frame metadata from ONE guarded cut."""

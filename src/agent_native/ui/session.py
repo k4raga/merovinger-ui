@@ -51,6 +51,7 @@ class UiSessionBroker:
         self.last_result = None
         self.last_displayed_basis = None
         self._terminal = None
+        self._invocation = None
 
     @property
     def ready(self):
@@ -67,6 +68,8 @@ class UiSessionBroker:
         if submission.status in (Status.AWAITING_DB, Status.RECONCILING):
             self.engine.pump.driver.turn.watch_operation(self.engine.pump.registration,
                 submission.operation_id, self._accept_outcome)
+            if submission.status == Status.RECONCILING and self._invocation is not None:
+                self._invocation._publish("unknown", submission.error, final=False)
         elif submission.status == Status.COMMITTED:
             self._terminal = submission
         else:
@@ -82,8 +85,12 @@ class UiSessionBroker:
 
     def _accept_outcome(self, result):
         self.engine.assert_owner()
-        if result.operation_id == self.expected and result.status in (Status.COMMITTED, Status.FAILED):
+        if result.operation_id != self.expected:
+            return
+        if result.status in (Status.COMMITTED, Status.FAILED):
             self._terminal = result
+        elif result.status == Status.RECONCILING and self._invocation is not None:
+            self._invocation._publish("unknown", result.error, final=False)
 
     def advance(self, outcomes):
         """Compatibility one-step drive; terminal DTOs are retained, never authority."""
@@ -111,8 +118,10 @@ class UiSessionBroker:
                 return
             if self.stage=="delivery":
                 receipt=self.kernel.receipt(self.origin,self.delivery)
-                if receipt.outcome in ("committed_local","pending_external","pending_approval","failed_no_effect"):
-                    self._finish(receipt.outcome,receipt.error)
+                if receipt.receipt is not None or receipt.outcome == "failed_no_effect":
+                    self._finish_delivery(receipt, lookup=True)
+                elif self._invocation is not None:
+                    self._invocation._publish("unknown", receipt.error or receipt.outcome, final=False)
                 return
             if not self._positive_current():
                 return
@@ -144,19 +153,23 @@ class UiSessionBroker:
             except AdmissionError as error:
                 self._finish("conflict",error.code)
                 return
+            try:
+                arguments = {k: wire(v, value) for k, v in action.arguments.items()}
+            except TypeError:
+                self._finish("failed", "invalid_arguments")
+                return
             proposal = {"command": descriptor.definition_id, "schema_revision": descriptor.revision,
                 "schema_fingerprint": descriptor.fingerprint, "basis": self.basis.handle,
-                "arguments": {k: wire(v, value) for k, v in action.arguments.items()}}
+                "arguments": arguments}
             result = self.kernel.deliver(self.origin, self.delivery, proposal)
-            if result.submission is not None and result.submission.status == Status.AWAITING_DB:
+            if result.submission is not None and result.submission.status in (Status.AWAITING_DB, Status.RECONCILING):
                 self._wait("delivery", result.submission)
             else:
-                self._finish(result.outcome, result.error)
+                self._finish_delivery(result)
         elif self.stage == "closing":
             self.stage, self.expected, self._terminal = "closing_view", None, None
         elif self.stage == "delivery":
-            receipt = self.kernel.receipt(self.origin, self.delivery)
-            self._finish(receipt.outcome, receipt.error)
+            self._finish_delivery(self.kernel.receipt(self.origin, self.delivery), lookup=True)
 
     def _positive_current(self):
         """Correlated canonical creation/state proof after definitive reconcile.
@@ -215,7 +228,7 @@ class UiSessionBroker:
                     and request["approval_id"] is None and request["invocation_id"] is None)
             return False
 
-    def invoke(self, action, value=None):
+    def invoke(self, action, value=None, *, _invocation=None):
         self.engine.assert_owner()
         coor = self.engine.coordinator
         if not self.ready or coor.phase != Phase.IDLE:
@@ -233,8 +246,9 @@ class UiSessionBroker:
                 self.engine.refresh()
                 return self.engine.refuse("display_conflict")
         # The main-thread call stack cannot yield between equality and issue.
+        request_id = uuid4().hex if _invocation is None else _invocation.invocation_id
         try:
-            self.basis = self.kernel.issue_basis(self.host,self.task,uuid4().hex,kind="ui")
+            self.basis = self.kernel.issue_basis(self.host, self.task, request_id, kind="ui")
         except AdmissionError as error:
             return self.engine.refuse(error.code)
         with coor.read() as current:
@@ -247,6 +261,7 @@ class UiSessionBroker:
             return self.engine.refuse("display_conflict")
         self.last_displayed_basis = self.basis.cut.identity
         self.pending = (action, value)
+        self._invocation = _invocation
         self.stage = "request"  # Hold BEFORE synchronous submission/notifications.
         try:
             desired=self.engine.command_resources(self.basis.cut)
@@ -308,7 +323,13 @@ class UiSessionBroker:
             return
         self._wait("request",opened.submission)
 
-    def _finish(self, outcome, error=None):
+    def _finish_delivery(self, result, *, lookup=False):
+        # A refusal to read a receipt does not prove the command was refused.
+        no_effect = result.outcome == "failed_no_effect" or (
+            not lookup and result.outcome in ("busy", "conflict", "denied", "failed"))
+        self._finish(result.outcome, result.error, receipt=result.receipt, uncertain=not no_effect)
+
+    def _finish(self, outcome, error=None, *, receipt=None, uncertain=False):
         self.engine.assert_owner()
         self.last_result = (outcome, error)
         if self.basis is not None:
@@ -316,10 +337,18 @@ class UiSessionBroker:
         self.basis = self.delivery = self.pending = self.expected = None
         self.pending_grant = None
         self._terminal = None
+        invocation, self._invocation = self._invocation, None
         self.stage = "ready" if self.grant is not None else "failed"
         self.engine.set_domain_busy(not self.ready)
         self.engine.set_outcome(error or outcome)
         self.engine.dirty = True
+        if invocation is not None:
+            if receipt is not None:
+                invocation._publish(receipt.outcome, error, receipt)
+            elif uncertain:
+                invocation._publish("unknown", error or outcome)
+            else:
+                invocation._publish("failed_no_effect", error or outcome)
 
 
 # Compatibility import; lifetime and driving live in the shared host adapter.

@@ -2,12 +2,13 @@
 
 # Changelog
 
-## Unreleased · documentation
+## Unreleased
 
 - English/Russian covers, mechanism diagrams and social-preview assets.
 - Language navigation at the top of README and all four technical guides.
 - Complete Russian quickstart, architecture, limits, verification and contributor/release notes.
-- Library source, runtime behavior, examples and test assertions are unchanged.
+- `AppBridge.invoke_tracked()` reports the result of a specific bound command
+  through a Qt callback and retains it on the returned invocation handle.
 
 ## 0.1.0a1 — 2026-11-17
 

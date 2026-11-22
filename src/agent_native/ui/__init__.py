@@ -13,7 +13,8 @@ __all__ = ["Action","Control","INPUT","text","button","editor","list_view","numb
            "EngineUi","UiUnavailable","UiAppliedCut","NodeMapping","PaintProvenance","GuiPump","GuiHostDriver","UiSessionBroker"]
 
 
-_BRIDGE_EXPORTS = ('AppBridge', 'BridgeObservation', 'BridgeStatus', 'BridgeAttachError')
+_BRIDGE_EXPORTS = ('AppBridge', 'BridgeObservation', 'BridgeStatus', 'BridgeAttachError',
+                   'BridgeInvocation', 'BridgeInvocationResult')
 _RUNTIME_EXPORTS = ('UiRuntime', 'UiRuntimeOpenError')
 _MODEL_EXPORTS = ('ModelObservation', 'ModelPayload', 'ModelImage', 'Destination')
 

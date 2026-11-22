@@ -1119,17 +1119,17 @@ class EngineUi:
             lambda view:PreparedChange(Patch(updates=updates)),memory_only=True)
         return result.status.value
 
-    def invoke(self,path,value=None):
+    def invoke(self, path, value=None, *, _invocation=None):
         self.assert_owner()
         if self.applying:
             return self.refuse("ui_applying")
         try:
-            result = self.pump.dispatch(self._invoke,path,value)
+            result = self.pump.dispatch(self._invoke, path, value, _invocation)
         except CoordinatorBusy:
             return self.refuse("busy")
         return result
 
-    def _invoke(self,path,value=None):
+    def _invoke(self, path, value=None, invocation=None):
         self.assert_owner()
         if self.readonly or self.controls[path].action is None:
             return self.refuse("readonly_view" if self.readonly else "control_has_no_action")
@@ -1142,7 +1142,7 @@ class EngineUi:
         row = self.rows[path]
         if not row.effective_visible or not row.effective_enabled:
             return self.refuse("hidden_or_disabled")
-        return self.broker.invoke(self.controls[path].action,value)
+        return self.broker.invoke(self.controls[path].action, value, _invocation=invocation)
 
     def submit_editor(self,path):
         self.assert_owner()

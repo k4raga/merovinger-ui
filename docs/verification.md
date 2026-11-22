@@ -18,13 +18,14 @@ For headless Linux, set `QT_QPA_PLATFORM=offscreen` before the test/smoke comman
 For native Windows validation, use an interactive desktop session and the
 actual `windows` Qt backend, not offscreen or a service session.
 
-The suite contains **9 standalone cases**:
+The suite contains **14 standalone cases**:
 
 | Area | Cases | Checks |
 | --- | ---: | --- |
 | Runtime | 4 | Durable typed command/read grant/restore; dependency isolation; live-owner refusal; late bootstrap acknowledgement |
 | Bindings | 3 | Existing editor/list/checkbox/spinbox adoption and restoration; readonly read grants; Actions rejected in readonly views |
 | Model observation | 2 | Authorized JSON/PNG and fresh typed change; hidden-field refusal; grant revocation; shared quotas; actual CPU cleanup |
+| Command outcomes | 5 | Local commit, refusal, delayed and uncertain acknowledgements, and distinct receipts for consecutive invocations |
 
 Tests use local synthetic data. There is no model, WASM or external application
 dependency.
