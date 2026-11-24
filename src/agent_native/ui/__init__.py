@@ -17,9 +17,22 @@ _BRIDGE_EXPORTS = ('AppBridge', 'BridgeObservation', 'BridgeStatus', 'BridgeAtta
                    'BridgeInvocation', 'BridgeInvocationResult')
 _RUNTIME_EXPORTS = ('UiRuntime', 'UiRuntimeOpenError')
 _MODEL_EXPORTS = ('ModelObservation', 'ModelPayload', 'ModelImage', 'Destination')
+_INTERACTION_EXPORTS = ('InteractionAction', 'InteractionBinding', 'InteractionCollection',
+                        'InteractionDefinition', 'InteractionNode')
+_INTERACTION_SESSION_EXPORTS = ('InteractionSession', 'InteractionTurn')
 
 
 def __getattr__(name):
+    if name in _INTERACTION_EXPORTS:
+        from . import interaction
+        value = getattr(interaction, name)
+        globals()[name] = value
+        return value
+    if name in _INTERACTION_SESSION_EXPORTS:
+        from . import interaction_session
+        value = getattr(interaction_session, name)
+        globals()[name] = value
+        return value
     if name in _RUNTIME_EXPORTS:
         from . import runtime
         value = getattr(runtime, name)
@@ -38,4 +51,5 @@ def __getattr__(name):
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
 
 
-__all__ += list(_BRIDGE_EXPORTS + _RUNTIME_EXPORTS + _MODEL_EXPORTS)
+__all__ += list(_BRIDGE_EXPORTS + _RUNTIME_EXPORTS + _MODEL_EXPORTS +
+                _INTERACTION_EXPORTS + _INTERACTION_SESSION_EXPORTS)

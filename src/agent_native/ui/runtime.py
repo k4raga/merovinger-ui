@@ -117,6 +117,21 @@ class UiRuntime:
         self._bridges.append(bridge)
         return bridge
 
+    def attach_interaction(self, parent, *, definition, destination="local", rules=None):
+        """Mount a strict SDK-owned surface with one human/agent interaction model.
+
+        The host owns the parent and event loop. Only the declared component
+        owns the contents of the empty parent; use attach() for legacy adoption.
+        """
+        if self.closed or self._port_close is not None:
+            raise RuntimeError("UI runtime is closing")
+        from .interaction_session import InteractionSession
+        session = InteractionSession.attach(parent, coordinator=self.coordinator, kernel=self.kernel,
+            index=self.index, principal=self.principal, definition=definition, rules=rules,
+            destination=destination)
+        self._bridges.append(session)
+        return session
+
     def close(self, *, timeout=5):
         """Return False for live owners/work. Never cancel tasks behind a bridge."""
         if type(timeout) not in (int, float) or not 0 < timeout <= 300:

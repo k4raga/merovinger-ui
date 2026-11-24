@@ -4,6 +4,8 @@
 
 ## Unreleased
 
+- Symbiotic interface definitions, a managed scene and a common native/agent
+  action dispatcher, with runnable form and layer-editor examples.
 - English/Russian covers, mechanism diagrams and social-preview assets.
 - Language navigation at the top of README and all four technical guides.
 - Complete Russian quickstart, architecture, limits, verification and contributor/release notes.

@@ -13,6 +13,37 @@ python -m venv .venv
 
 ~~~console
 python -m pip install .
+~~~
+
+## Зарегистрируйте симбиотический интерфейс
+
+[Форма и редактор слоёв](../examples/symbiotic/main.py) — два независимых
+компонента на основе `InteractionDefinition`. Из корня репозитория запустите
+один из примеров.
+
+```console
+python examples/symbiotic/main.py form
+python examples/symbiotic/main.py layers
+```
+
+Подключите описание вызовом `runtime.attach_interaction(parent, definition=definition)`.
+Оно связывает типизированное состояние взаимодействия, исходные предметные
+ссылки, семантические узлы сцены и их действия. SDK управляет вводом в сцене
+и публикует её текущую версию. Оба примера используют общие API рантайма,
+а редактор добавляет собственные слои, выделение и преобразования.
+
+Адаптер агента открывает ход через `session.prepare_turn(request_id)`.
+Снимок содержит состояние и разрешённые действия. Передайте `frame=True`,
+когда модели нужен кадр этой сцены. Выполните действие через
+`session.invoke_tool(request_id, offer_id, call_id, slot, arguments)`
+и проверьте результат этого вызова. После перехода получите новый снимок.
+В конце хода вызовите `session.finish_turn(request_id)`.
+
+## Существующие интеграции AppBridge
+
+Пример AppBridge подходит приложениям, которые используют прежний API привязки контролов.
+
+~~~console
 python examples/ui_agent/main.py --smoke --report .runtime/demo.json
 ~~~
 

@@ -38,6 +38,29 @@ Your model adapter is outside this library. It can consume the prepared JSON
 and PNG and choose a bound action. The command still follows the original
 admission path. Fresh observation verifies the published result.
 
+## Symbiotic interfaces
+
+A symbiotic interface gives the human and the agent access to the same
+application interaction. With the same permissions and screen revision,
+both can see the current step, continue it, and observe its outcome.
+Navigation, selection, open dialogs, draft values and previews are part
+of that interaction.
+
+Extension authors register component state, typed actions and their
+availability once. Native controls and canvas gestures target those
+actions. The agent receives the component's state and permitted actions
+from the same revision. The host dispatcher checks both inputs, and
+domain writes go through the existing command kernel and its receipts.
+An agent can resume a draft the human started or leave a draft ready
+for the human to continue.
+
+Custom components provide the semantic objects and input regions
+that the runtime renders and routes. For example, a layer editor
+can publish its layer order, geometry, selection and pending transform.
+Dragging and a typed transform request use the same transition.
+The symbiotic interface contract covers surfaces whose semantic display
+and input the SDK controls and can validate.
+
 ## Ownership
 
 The application owns QApplication and its normal event loop. UiRuntime owns

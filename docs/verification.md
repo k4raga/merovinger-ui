@@ -15,10 +15,12 @@ python -m build --wheel
 ```
 
 For headless Linux, set `QT_QPA_PLATFORM=offscreen` before the test/smoke commands.
+On macOS, set `QT_QPA_PLATFORM=offscreen QT_STYLE_OVERRIDE=Fusion` for a run
+that keeps test windows off the desktop.
 For native Windows validation, use an interactive desktop session and the
 actual `windows` Qt backend, not offscreen or a service session.
 
-The suite contains **14 standalone cases**:
+The suite contains **24 standalone cases**:
 
 | Area | Cases | Checks |
 | --- | ---: | --- |
@@ -26,9 +28,22 @@ The suite contains **14 standalone cases**:
 | Bindings | 3 | Existing editor/list/checkbox/spinbox adoption and restoration; readonly read grants; Actions rejected in readonly views |
 | Model observation | 2 | Authorized JSON/PNG and fresh typed change; hidden-field refusal; grant revocation; shared quotas; actual CPU cleanup |
 | Command outcomes | 5 | Local commit, refusal, delayed and uncertain acknowledgements, and distinct receipts for consecutive invocations |
+| Symbiotic interfaces | 10 | Bidirectional form and layer-editor handoff, earlier database restore, permissions, callback cleanup, stale actions and optional scene frames |
 
 Tests use local synthetic data. There is no model, WASM or external application
 dependency.
+
+## Symbiotic interface validation
+
+The managed form and layer-editor cases passed on macOS with Python 3.13.18,
+Qt 6.12.0, the offscreen backend and the Fusion style. The cases cover
+human-to-agent and agent-to-human handoff, stale and repeated actions, cancellation,
+and a confirmed SQLite write. A separate Qt and Merovinger Chat exercise
+completed the form through a synthetic model adapter.
+
+The optional image is rendered from the published semantic scene. The
+managed surface validates input against that scene before accepting an action.
+The older Windows results below apply to the standalone bindings snapshot.
 
 ## Inherited source-snapshot validation
 

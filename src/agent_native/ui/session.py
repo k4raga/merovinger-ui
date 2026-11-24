@@ -268,7 +268,7 @@ class UiSessionBroker:
         except GrantIntegrityError:
             self._finish("denied", "activity_backlink_unverified")
             return self.engine.refuse("activity_backlink_unverified")
-        if desired != self.resources:
+        if desired != self.resources or self.permissions.commands != self.commands:
             self._issue_grant("action_grant", desired)
         else:
             self._open_pending_request()

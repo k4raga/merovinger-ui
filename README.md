@@ -8,6 +8,9 @@
 
 Python 3.13 · PySide6 · Alpha · [MIT](LICENSE)
 
+Start a new managed surface with an [interaction definition](docs/quickstart.md#register-a-symbiotic-interface).
+The same definition drives the native view and the agent's available actions.
+
 Bind a small, explicit set of Qt widgets to your application state. Your users
 interact with native controls; your own agent receives policy-filtered JSON and
 an approved PNG of the managed surface. Both use the same typed commands.

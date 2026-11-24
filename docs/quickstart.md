@@ -13,6 +13,37 @@ Activate with `source .venv/bin/activate` on a POSIX shell, or
 
 ```console
 python -m pip install .
+```
+
+## Register a symbiotic interface
+
+The [form and layer editor](../examples/symbiotic/main.py) show two
+independent components built from an `InteractionDefinition`.
+Run the examples from the repository root:
+
+```console
+python examples/symbiotic/main.py form
+python examples/symbiotic/main.py layers
+```
+
+Mount the definition with `runtime.attach_interaction(parent, definition=definition)`.
+The definition links a typed interaction state, original domain references,
+semantic scene nodes and their actions. The SDK owns the scene's input and
+publishes its current revision. The examples share the same runtime APIs.
+The editor adds its own layer, selection and transformation semantics.
+
+An agent adapter opens a turn with `session.prepare_turn(request_id)`.
+The returned snapshot contains the current state and permitted actions.
+Pass `frame=True` when the model needs a frame of that scene. Submit an
+action with `session.invoke_tool(request_id, offer_id, call_id, slot, arguments)`
+and read its tracked outcome. Obtain a new offer after a transition and
+call `session.finish_turn(request_id)` when the model turn ends.
+
+## Existing AppBridge integrations
+
+The existing AppBridge example remains available for applications using bound controls.
+
+```console
 python examples/ui_agent/main.py --smoke --report .runtime/demo.json
 ```
 
