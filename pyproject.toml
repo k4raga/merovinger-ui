@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "merovinger-ui"
 version = "0.1.0a1"
-description = "Shared state, typed actions and coherent frames for native Qt applications"
+description = "PySide6 (Qt) library for natural-language commands in Python desktop apps. Shared state and typed actions for users and AI agents."
 readme = "README.md"
 requires-python = ">=3.13,<3.14"
 license = "MIT"

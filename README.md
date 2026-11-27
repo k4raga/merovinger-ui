@@ -1,26 +1,46 @@
 **English** · [Русский](README.ru.md)
 
-![Merovinger UI — one state, human and agent views](docs/assets/hero.svg)
-
 # Merovinger UI
 
-**Native Qt interfaces and agent context, driven by the same state and typed commands.**
+**Natural-language commands for Python desktop apps.**
+
+Merovinger UI is an open-source PySide6 (Qt) library for adding AI agents to
+desktop applications. A user can give a request such as “Rename this entry” to
+the current screen. Your model adapter selects a typed action from that screen,
+and Merovinger applies it through the same application state and command
+handlers used by the native controls.
 
 Python 3.13 · PySide6 · Alpha · [MIT](LICENSE)
 
-Start a new managed surface with an [interaction definition](docs/quickstart.md#register-a-symbiotic-interface).
-The same definition drives the native view and the agent's available actions.
+![Merovinger UI shows the same application state to a person and an AI agent](docs/assets/hero.svg)
 
-Bind a small, explicit set of Qt widgets to your application state. Your users
-interact with native controls; your own agent receives policy-filtered JSON and
-an approved PNG of the managed surface. Both use the same typed commands.
+## What you can build
+
+- **Forms with AI assistance.** A person can start filling out a form, an agent
+  can continue the same draft, and the person can review it before saving.
+- **Interactive editors.** A layer editor can expose selection, movement,
+  preview, confirmation, and cancellation to both the user and the agent.
+- **AI actions in an existing Qt application.** Bind supported Qt widgets to
+  application fields and commands, then give your model access to those actions.
+
+The [form and layer editor examples](examples/symbiotic/main.py) demonstrate the
+first two scenarios. The [Qt widget example](examples/ui_agent/main.py) shows
+how to attach an agent to supported controls in an existing window.
+
+## How a symbiotic interface works
+
+A **symbiotic interface** gives people and AI agents a shared interaction model
+for the current screen. An [interaction definition](docs/quickstart.md#register-a-symbiotic-interface)
+declares the state, semantic scene, and typed actions that drive both the native
+view and the agent's available actions.
 
 ![The three-step mechanism](docs/assets/mechanics.svg)
 
-1. **Declare** a Registry, typed state and command handlers.
-2. **Bind** managed Qt controls to those fields and commands.
-3. **Observe → act → verify:** take a coherent context/frame packet, invoke a
-   bound action, then observe the committed result.
+1. **Declare** application state, validation, and command handlers.
+2. **Bind** Qt controls to those fields and actions. The agent receives
+   policy-filtered JSON and can request a PNG of the managed surface.
+3. **Observe, act, and verify.** Validate the proposed action against the current
+   screen and use its invocation result to confirm a committed change.
 
 ## Try it
 
@@ -40,11 +60,19 @@ python -m pip install "git+https://github.com/k4raga/merovinger-ui.git"
 ```
 
 The [self-contained example](examples/ui_agent/main.py) opens a real Qt window
-with an existing line edit, checkbox and list. A tiny local agent reads JSON and
-PNG, chooses a typed toggle, and checks a new packet. It makes **no model or
-network calls**. Substitute your own model adapter at that boundary.
+with a line edit, checkbox, and list. A local test agent reads JSON and PNG,
+toggles the checkbox through a typed command, and verifies the updated state.
+The example runs locally with a scripted agent. For natural-language requests,
+connect a model through your application's own adapter.
 
-![Managed Qt example](docs/assets/demo.png)
+![PySide6 desktop demo with a text field, checkbox, and list bound to application state](docs/assets/demo.png)
+
+To open a managed form or an interactive layer editor, run either example:
+
+```bash
+python examples/symbiotic/main.py form
+python examples/symbiotic/main.py layers
+```
 
 The distribution is `merovinger-ui`; Python imports remain `agent_native`.
 
@@ -98,14 +126,11 @@ application, not inferred from arbitrary existing windows.
 
 ## Verification and scope
 
-The exported SDK has passed **9 standalone UI cases on Windows 11 LTSC** with
-Python 3.13.17 and Qt 6.12.0 using the native `windows` backend, plus a real
-context/PNG → typed change → fresh packet example. This is scoped validation of
-the source snapshot, not a promise about every Windows version or application.
-
-Ubuntu offscreen checks and the current repository's reproducible commands are
-listed in [verification](docs/verification.md). macOS native behavior is not
-verified. This release is **alpha**; review the [limits](docs/limits.md).
+The standalone bindings snapshot passed **9 UI cases on Windows 11 LTSC** with
+the native Qt `windows` backend. The managed form and layer-editor scenarios
+passed on macOS with Qt offscreen. [Verification](docs/verification.md) documents
+the tested configurations, Ubuntu offscreen checks, and commands to reproduce
+them. This release is **alpha**. See the [supported scope and limits](docs/limits.md).
 
 [Quickstart](docs/quickstart.md) · [Architecture](docs/architecture.md) ·
 [Contributing](CONTRIBUTING.md) · [Changelog](CHANGELOG.md) ·
